@@ -1,0 +1,114 @@
+---
+title: "Oxford COVID-19 Government Response Tracker"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(leaflet)
+library(readxl)
+library(tidyverse)
+library(writexl)
+library(httr)
+library(plotly)
+library(crosstalk)
+library(rvest)
+library(zoo)
+
+library(scales)
+library(vroom)
+
+oxfordstringency<-vroom("https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/OxCGRT_latest.csv")
+oxfordstringency$Date <- as.Date(as.character(oxfordstringency$Date), format="%Y%m%d")
+oxfordstringency1<-oxfordstringency%>%
+  filter(Date==Sys.Date()-1)%>%
+  select(CountryName,CountryCode, ConfirmedCases,ConfirmedDeaths,StringencyIndexForDisplay,StringencyIndex)%>%
+  mutate(Info=paste("<br>","Country:",CountryName, "<br>","Confirmed Cases:",format(ConfirmedCases,big.mark = ","), "<br>","Confirmed Deaths:",format(ConfirmedDeaths,big.mark = ","), "<br>","Stringency Index:",StringencyIndexForDisplay, "<br>"))
+
+oxfordstringency2<-oxfordstringency%>%
+  
+  select(CountryName,ConfirmedCases, ConfirmedDeaths, StringencyIndexForDisplay,Date)%>%
+  mutate(Info=paste("<br>","Country:",CountryName, "<br>","Confirmed Cases:",format(ConfirmedCases,big.mark = ","), "<br>","Confirmed Deaths:",format(ConfirmedDeaths,big.mark = ","), "<br>","Stringency Index:",StringencyIndexForDisplay, "<br>",
+                    "Date:",Date,"<br>"))
+
+
+
+```
+
+Visuals
+=================================================================
+
+Row {data-height=300} 
+-----------------------------------------------------------------------
+### **About project**
+
+This is visual presentation of data from [Oxford COVID-19 Government Response Tracker](https://www.bsg.ox.ac.uk/research/research-projects/oxford-covid-19-government-response-tracker). Systematic information on which governments have taken which measures, and when, can help decision-makers and citizens understand the robustness of governmental responses in a consistent way, aiding efforts to fight the pandemic. The OxCGRT systematically collects information on several different common policy responses governments have taken, scores the stringency of such measures, and aggregates these scores into a common Stringency Index. You can also read our [calculation of the Stringency Index](https://www.bsg.ox.ac.uk/sites/default/files/Calculation%20and%20presentation%20of%20the%20Stringency%20Index.pdf). _Hale, Thomas, Sam Webster, Anna Petherick, Toby Phillips, and Beatriz Kira. (2020). Oxford COVID-19 Government Response Tracker. Data use policy: Creative Commons Attribution CC BY standard_.
+
+
+Row {data-height=700} 
+-----------------------------------------------------------------------
+
+
+### **Comparing Countries by Number of Cases and Stringency Index on `r Sys.Date()`**{data-height=500} 
+
+```{r}
+gg1<-ggplot(oxfordstringency1,aes(x=ConfirmedCases,y=StringencyIndexForDisplay, label=Info,color=CountryName))+
+  geom_point(position = "jitter")+
+   scale_x_continuous(labels = comma)+
+  ylab("Stringency Index")+
+  xlab("Number of Cases")+
+  theme(legend.position = "none")
+
+gg<-ggplotly(gg1,tooltip = "label")
+
+gg
+```
+
+Stringency Index by Country through Time
+=================================================================
+
+
+```{r}
+
+### **Stringency Index by Country through Time**
+tx <- highlight_key(oxfordstringency2)
+gg <- ggplot(tx,aes(Date, StringencyIndexForDisplay, group = CountryName,label = Info, color=CountryName)) +
+ 
+  geom_line(position = position_dodge(0.2))+ 
+
+  scale_x_date(date_breaks = "1 month",date_labels = "%d.%m.")+
+  #geom_jitter(height = 0.05)+
+  #scale_color_viridis(discrete = TRUE) +
+  ylab("Stringency Index")+
+  xlab("")+
+  theme(legend.position = "none", 
+        panel.background = element_rect (fill = "lightcyan"),
+        plot.margin = margin(0, 0, 2.2, 0, "cm"),
+        plot.caption = element_text()
+  )
+
+
+filter <- bscols(
+  filter_select("id", "Choose Country", tx, ~CountryName),
+  ggplotly(gg,tooltip = "label",height=450)%>%config(displayModeBar=FALSE),
+  widths = c(12, 12)
+)
+
+filter
+
+```
+
+
+
+```{r}
+
+#Table
+#=================================================================
+### **Table with information**
+#DT :: datatable (oxfordstringency, rownames = FALSE,options = list(
+ # bPaginate = TRUE))
+
+```
