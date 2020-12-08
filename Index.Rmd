@@ -67,7 +67,39 @@ gg<-ggplotly(gg1,tooltip = "label")
 gg
 ```
 
+Stringency Index by Country through Time
+=================================================================
 
+
+```{r}
+
+### **Stringency Index by Country through Time**
+tx <- highlight_key(oxfordstringency2)
+gg <- ggplot(tx,aes(Date, StringencyIndexForDisplay, group = CountryName,label = Info, color=CountryName)) +
+ 
+  geom_line(position = position_dodge(0.2))+ 
+
+  scale_x_date(date_breaks = "1 month",date_labels = "%d.%m.")+
+  #geom_jitter(height = 0.05)+
+  #scale_color_viridis(discrete = TRUE) +
+  ylab("Stringency Index")+
+  xlab("")+
+  theme(legend.position = "none", 
+        panel.background = element_rect (fill = "lightcyan"),
+        plot.margin = margin(0, 0, 2.2, 0, "cm"),
+        plot.caption = element_text()
+  )
+
+
+filter <- bscols(
+  filter_select("id", "Choose Country", tx, ~CountryName),
+  ggplotly(gg,tooltip = "label",height=450)%>%config(displayModeBar=FALSE),
+  widths = c(12, 12)
+)
+
+filter
+
+```
 
 
 
