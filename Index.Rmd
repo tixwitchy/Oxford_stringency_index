@@ -99,12 +99,14 @@ gg<-ggplotly(gg1,tooltip = "label")
 gg
 ```
 
-Table
-=================================================================
-### **Table with information**
+
 
 ```{r}
-DT :: datatable (oxfordstringency, rownames = FALSE,options = list(
-  bPaginate = TRUE))
+
+#Table
+#=================================================================
+### **Table with information**
+#DT :: datatable (oxfordstringency, rownames = FALSE,options = list(
+ # bPaginate = TRUE))
 
 ```
