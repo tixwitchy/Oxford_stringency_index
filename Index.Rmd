@@ -51,32 +51,32 @@ This is visual presentation of data from [Oxford COVID-19 Government Response Tr
 Row {data-height=700} 
 -----------------------------------------------------------------------
 
-### **Stringency Index by Country through Time**
+
+### **Comparing Countries by Number of Cases and Stringency Index on `r Sys.Date()`**{data-height=500} 
 
 ```{r}
-tx <- highlight_key(oxfordstringency2)
-gg <- ggplot(tx,aes(Date, StringencyIndexForDisplay, group = CountryName,label = Info, color=CountryName)) +
- 
-  geom_line(position = position_dodge(0.2))+ 
-
-  scale_x_date(date_breaks = "1 month",date_labels = "%d.%m.")+
-  #geom_jitter(height = 0.05)+
-  #scale_color_viridis(discrete = TRUE) +
+gg1<-ggplot(oxfordstringency1,aes(x=ConfirmedCases,y=StringencyIndexForDisplay, label=Info,color=CountryName))+
+  geom_point(position = "jitter")+
+   scale_x_continuous(labels = comma)+
   ylab("Stringency Index")+
-  xlab("")+
-  theme(legend.position = "none", 
-        panel.background = element_rect (fill = "lightcyan"),
-        plot.margin = margin(0, 0, 2.2, 0, "cm"),
-        plot.caption = element_text()
-  )
+  xlab("Number of Cases")+
+  theme(legend.position = "none")
+
+gg<-ggplotly(gg1,tooltip = "label")
+
+gg
+```
 
 
-filter <- bscols(
-  filter_select("id", "Choose Country", tx, ~CountryName),
-  ggplotly(gg,tooltip = "label",height=450)%>%config(displayModeBar=FALSE),
-  widths = c(12, 12)
-)
 
-filter
+
+
+```{r}
+
+#Table
+#=================================================================
+### **Table with information**
+#DT :: datatable (oxfordstringency, rownames = FALSE,options = list(
+ # bPaginate = TRUE))
 
 ```
