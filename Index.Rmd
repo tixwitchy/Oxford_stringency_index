@@ -19,8 +19,9 @@ library(rvest)
 library(zoo)
 
 library(scales)
+library(vroom)
 
-oxfordstringency<-read.csv("https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/OxCGRT_latest.csv")
+oxfordstringency<-vroom("https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/OxCGRT_latest.csv")
 oxfordstringency$Date <- as.Date(as.character(oxfordstringency$Date), format="%Y%m%d")
 oxfordstringency1<-oxfordstringency%>%
   filter(Date==Sys.Date()-1)%>%
