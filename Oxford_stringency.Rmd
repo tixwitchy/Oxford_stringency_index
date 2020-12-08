@@ -51,7 +51,6 @@ This is visual presentation of data from [Oxford COVID-19 Government Response Tr
 Row {data-height=700} 
 -----------------------------------------------------------------------
 
-
 ### **Comparing Countries by Number of Cases and Stringency Index on `r Sys.Date()`**{data-height=500} 
 
 ```{r}
@@ -67,13 +66,15 @@ gg<-ggplotly(gg1,tooltip = "label")
 gg
 ```
 
-Stringency Index by Country through Time
+Stringency Index by Country through time
 =================================================================
 
 
+### **Stringency Index by Country through Time**
+
 ```{r}
 
-### **Stringency Index by Country through Time**
+
 tx <- highlight_key(oxfordstringency2)
 gg <- ggplot(tx,aes(Date, StringencyIndexForDisplay, group = CountryName,label = Info, color=CountryName)) +
  
@@ -104,10 +105,11 @@ filter
 
 
 ```{r}
-
 #Table
 #=================================================================
+
 ### **Table with information**
+
 #DT :: datatable (oxfordstringency, rownames = FALSE,options = list(
  # bPaginate = TRUE))
 
