@@ -31,6 +31,7 @@ oxfordstringency1<-oxfordstringency%>%
 oxfordstringency2<-oxfordstringency%>%
   
   select(CountryName,ConfirmedCases, ConfirmedDeaths, StringencyIndexForDisplay,Date)%>%
+  filter(Date!=Sys.Date())%>%
   mutate(Info=paste("<br>","Country:",CountryName, "<br>","Confirmed Cases:",format(ConfirmedCases,big.mark = ","), "<br>","Confirmed Deaths:",format(ConfirmedDeaths,big.mark = ","), "<br>","Stringency Index:",StringencyIndexForDisplay, "<br>",
                     "Date:",Date,"<br>"))
 
@@ -51,7 +52,7 @@ This is visual presentation of data from [Oxford COVID-19 Government Response Tr
 Row {data-height=700} 
 -----------------------------------------------------------------------
 
-### **Comparing Countries by Number of Cases and Stringency Index on `r Sys.Date()-1`**{data-height=500} 
+### **Comparing Countries by Total Number of Cases and Stringency Index on `r Sys.Date()-1`**{data-height=500} 
 
 ```{r}
 gg1<-ggplot(oxfordstringency1,aes(x=ConfirmedCases,y=StringencyIndexForDisplay, label=Info,color=CountryName))+
