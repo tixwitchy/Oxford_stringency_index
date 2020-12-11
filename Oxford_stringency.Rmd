@@ -51,7 +51,7 @@ This is visual presentation of data from [Oxford COVID-19 Government Response Tr
 Row {data-height=700} 
 -----------------------------------------------------------------------
 
-### **Comparing Countries by Number of Cases and Stringency Index on `r Sys.Date()`**{data-height=500} 
+### **Comparing Countries by Number of Cases and Stringency Index on `r Sys.Date()-1`**{data-height=500} 
 
 ```{r}
 gg1<-ggplot(oxfordstringency1,aes(x=ConfirmedCases,y=StringencyIndexForDisplay, label=Info,color=CountryName))+
