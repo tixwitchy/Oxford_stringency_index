@@ -30,7 +30,7 @@ oxfordstringency1<-oxfordstringency%>%
 
 oxfordstringency2<-oxfordstringency%>%
   
-  select(CountryName,ConfirmedCases, ConfirmedDeaths, StringencyIndexForDisplay,Date)%>%
+  select(CountryName,CountryCode, ConfirmedCases, ConfirmedDeaths, StringencyIndexForDisplay,Date)%>%
   filter(Date!=Sys.Date())%>%
   mutate(Info=paste("<br>","Country:",CountryName, "<br>","Confirmed Cases:",format(ConfirmedCases,big.mark = ","), "<br>","Confirmed Deaths:",format(ConfirmedDeaths,big.mark = ","), "<br>","Stringency Index:",StringencyIndexForDisplay, "<br>",
                     "Date:",Date,"<br>"))
